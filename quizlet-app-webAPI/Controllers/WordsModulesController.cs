@@ -21,6 +21,7 @@ namespace quizlet_app_webAPI.Controllers
             return Ok(await dbContext.WordsModules.ToListAsync());
             
         }
+
         [HttpPost]
         public async Task<IActionResult> AddWordsModule(AddWordsModuleRequest addWordsModuleRequest)
         {
@@ -36,6 +37,24 @@ namespace quizlet_app_webAPI.Controllers
 
             return Ok(wordsModule);
             
+        }
+
+        [HttpPut]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> UpdateWordsModule([FromRoute] Guid id, UpdateWordsModuleRequest updateWordsModuleRequest)
+        {
+            var wordsModule = await dbContext.WordsModules.FindAsync(id);
+            if (wordsModule !=null)
+            {
+                wordsModule.Words = updateWordsModuleRequest.Words;
+                wordsModule.CreateDate = updateWordsModuleRequest.CreateDate;
+                wordsModule.Name = updateWordsModuleRequest.Name;
+
+                await dbContext.SaveChangesAsync();
+
+                return Ok(wordsModule);
+            }
+            return NotFound();
         }
     }
 }
