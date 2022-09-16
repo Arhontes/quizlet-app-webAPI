@@ -5,6 +5,6 @@
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Words { get; set; }
-        public DateTime createDate { get; set; }
+        public DateTime CreateDate { get; set; }
     }
 }
