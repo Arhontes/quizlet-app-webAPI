@@ -21,6 +21,18 @@ namespace quizlet_app_webAPI.Controllers
             return Ok(await dbContext.WordsModules.ToListAsync());
             
         }
+        [HttpGet]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> GetWordsModule([FromRoute] Guid id)
+        {
+            var wordsModule = await dbContext.WordsModules.FindAsync(id);
+            if (wordsModule==null)
+            {
+                return NotFound();
+            }
+            return Ok(wordsModule);
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> AddWordsModule(AddWordsModuleRequest addWordsModuleRequest)
