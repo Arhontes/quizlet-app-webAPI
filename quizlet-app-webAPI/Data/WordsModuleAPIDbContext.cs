@@ -10,5 +10,7 @@ namespace quizlet_app_webAPI.Data
 
         }
         public DbSet<WordsModule> WordsModules { get; set; }
+        public DbSet<Word> Words { get; set; }
+
     }
 }

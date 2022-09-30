@@ -10,7 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<WordsModuleAPIDbContext>(options => options.UseInMemoryDatabase("WordsModulesDb"));
+//builder.Services.AddDbContext<WordsModuleAPIDbContext>(options => options.UseInMemoryDatabase("WordsModulesDb"));
+builder.Services.AddDbContext<WordsModuleAPIDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("WordsModulesConnectionString")));
 
 var app = builder.Build();
 

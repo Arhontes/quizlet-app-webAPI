@@ -3,7 +3,7 @@
     public class UpdateWordsModuleRequest
     {
         public string Name { get; set; }
-        public string Words { get; set; }
+        public List<Word> Words { get; set; }
         public DateTime CreateDate { get; set; }
     }
 }

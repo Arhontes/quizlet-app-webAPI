@@ -19,7 +19,6 @@ namespace quizlet_app_webAPI.Controllers
         public async Task<IActionResult> GetWordsModules()
         {
             return Ok(await dbContext.WordsModules.ToListAsync());
-            
         }
         [HttpGet]
         [Route("{id:guid}")]
@@ -40,7 +39,6 @@ namespace quizlet_app_webAPI.Controllers
             var wordsModule = new WordsModule()
             {
                 Id = Guid.NewGuid(),
-                Words = addWordsModuleRequest.Words,
                 CreateDate = DateTime.Now,
                 Name = addWordsModuleRequest.Name,
             };
