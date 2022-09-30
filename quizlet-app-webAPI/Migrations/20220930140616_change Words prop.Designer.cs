@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using quizlet_app_webAPI.Data;
 
@@ -11,9 +12,10 @@ using quizlet_app_webAPI.Data;
 namespace quizlet_app_webAPI.Migrations
 {
     [DbContext(typeof(WordsModuleAPIDbContext))]
-    partial class WordsModuleAPIDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220930140616_change Words prop")]
+    partial class changeWordsprop
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,11 +74,13 @@ namespace quizlet_app_webAPI.Migrations
 
             modelBuilder.Entity("quizlet_app_webAPI.Models.Word", b =>
                 {
-                    b.HasOne("quizlet_app_webAPI.Models.WordsModule", null)
+                    b.HasOne("quizlet_app_webAPI.Models.WordsModule", "WordsModule")
                         .WithMany("Words")
                         .HasForeignKey("WordsModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("WordsModule");
                 });
 
             modelBuilder.Entity("quizlet_app_webAPI.Models.WordsModule", b =>

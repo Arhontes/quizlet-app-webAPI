@@ -20,6 +20,6 @@
         public string? Transcription { get; set; }
         public string? WordImgUrl { get; set; }
         public Guid WordsModuleId { get; set; }
-        public virtual WordsModule WordsModule { get; set; }
+       
     }
 }

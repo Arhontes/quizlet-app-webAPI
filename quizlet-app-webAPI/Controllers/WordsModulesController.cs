@@ -56,7 +56,6 @@ namespace quizlet_app_webAPI.Controllers
             var wordsModule = await dbContext.WordsModules.FindAsync(id);
             if (wordsModule !=null)
             {
-                wordsModule.Words = updateWordsModuleRequest.Words;
                 wordsModule.CreateDate = updateWordsModuleRequest.CreateDate;
                 wordsModule.Name = updateWordsModuleRequest.Name;
 
