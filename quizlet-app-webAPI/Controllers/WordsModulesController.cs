@@ -4,7 +4,8 @@ using quizlet_app_webAPI.Data;
 using quizlet_app_webAPI.Models;
 
 namespace quizlet_app_webAPI.Controllers
-{   [ApiController]
+{
+    [ApiController]
     [Route("api/wordsmodules")]
     public class WordsModulesController : Controller
     {
@@ -25,7 +26,7 @@ namespace quizlet_app_webAPI.Controllers
         public async Task<IActionResult> GetWordsModule([FromRoute] Guid id)
         {
             var wordsModule = await dbContext.WordsModules.FindAsync(id);
-            if (wordsModule==null)
+            if (wordsModule == null)
             {
                 return NotFound();
             }
@@ -46,7 +47,7 @@ namespace quizlet_app_webAPI.Controllers
             await dbContext.SaveChangesAsync();
 
             return Ok(wordsModule);
-            
+
         }
 
         [HttpPut]
@@ -54,7 +55,7 @@ namespace quizlet_app_webAPI.Controllers
         public async Task<IActionResult> UpdateWordsModule([FromRoute] Guid id, UpdateWordsModuleRequest updateWordsModuleRequest)
         {
             var wordsModule = await dbContext.WordsModules.FindAsync(id);
-            if (wordsModule !=null)
+            if (wordsModule != null)
             {
                 wordsModule.CreateDate = updateWordsModuleRequest.CreateDate;
                 wordsModule.Name = updateWordsModuleRequest.Name;
@@ -62,6 +63,25 @@ namespace quizlet_app_webAPI.Controllers
                 await dbContext.SaveChangesAsync();
 
                 return Ok(wordsModule);
+            }
+            return NotFound();
+        }
+        [HttpDelete]
+        [Route("{id:guid}")]
+        public async Task<IActionResult> DeleteWordsModule([FromRoute] Guid id, UpdateWordsModuleRequest updateWordsModuleRequest)
+        {
+            var module = await dbContext.WordsModules.FindAsync(id);
+
+            if (module != null)
+            {
+                dbContext.Remove(module);
+
+                var words = await dbContext.Words.Where(el => el.WordsModuleId == module.Id).ToListAsync();
+
+                if (words.Any()) dbContext.Remove(words);
+
+                await dbContext.SaveChangesAsync();
+                return Ok(module);
             }
             return NotFound();
         }

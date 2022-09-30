@@ -2,15 +2,15 @@
 
 namespace quizlet_app_webAPI.Models
 {
-    public class AddWordRequest
+    public class UpdateWordRequest
     {
         [Required]
-        public string Meaning { get; set; }
-        [Required]
-        public string Definition { get; set; }
+        public string WordId { get; set; }
+        public string? Meaning { get; set; }
+        public string? Definition { get; set; }
         public string? Transcription { get; set; }
         public string? WordImgUrl { get; set; }
         [Required]
-        public string WordsModuleId { get; set; }
+        public string? WordsModuleId { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 {
     public class WordsModule
     {
+        protected internal int maxWordsCount = 100;
         public WordsModule()
         {
             Words = new List<Word>();
@@ -14,7 +15,7 @@
             set => name = (!string.IsNullOrWhiteSpace(value)) ? value : "word";
         }
         public List<Word> Words { get; set; }
-        
+        public int WordsCount { get; set; }
       
         public DateTime CreateDate { get; set; }
     }

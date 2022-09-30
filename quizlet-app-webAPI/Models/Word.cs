@@ -20,6 +20,6 @@
         public string? Transcription { get; set; }
         public string? WordImgUrl { get; set; }
         public Guid WordsModuleId { get; set; }
-       
+        
     }
 }
