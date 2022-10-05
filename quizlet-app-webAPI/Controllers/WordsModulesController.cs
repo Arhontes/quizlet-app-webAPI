@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using quizlet_app_webAPI.Data;
 using quizlet_app_webAPI.Models;
@@ -7,6 +8,7 @@ namespace quizlet_app_webAPI.Controllers
 {
     [ApiController]
     [Route("api/wordsmodules")]
+    [Authorize]
     public class WordsModulesController : Controller
     {
         private readonly WordsModuleAPIDbContext dbContext;
@@ -21,7 +23,7 @@ namespace quizlet_app_webAPI.Controllers
         {
             return Ok(await dbContext.WordsModules.ToListAsync());
         }
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         [Route("{id:guid}")]
         public async Task<IActionResult> GetWordsModule([FromRoute] Guid id)
         {
