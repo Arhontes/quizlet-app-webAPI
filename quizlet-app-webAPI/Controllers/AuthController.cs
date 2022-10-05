@@ -41,7 +41,7 @@ namespace quizlet_app_webAPI.Controllers
                 return BadRequest("inccorect password");
             }
             string token = CreateToken(user);
-            return Ok("my crazy token");
+            return Ok(token);
         }
 
         private string CreateToken(User user)
@@ -51,7 +51,7 @@ namespace quizlet_app_webAPI.Controllers
                 new Claim(ClaimTypes.Name, user.UserName),
             };
 
-            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(configuration.GetSection("AppSetting:Token").Value));
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(configuration.GetSection("AppSettings:Token").Value));
 
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
