@@ -7,7 +7,7 @@ namespace quizlet_app_webAPI.Data
     {
         public WordsModuleAPIDbContext(DbContextOptions options) : base(options)
         {
-            Database.EnsureCreated();
+            
         }
         public DbSet<WordsModule> WordsModules { get; set; }
         public DbSet<Word> Words { get; set; }
