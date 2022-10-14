@@ -17,7 +17,7 @@ namespace quizlet_app_webAPI.Controllers
         public static ApplicationUser newUser = new ApplicationUser();
         private readonly IConfiguration configuration;
         private readonly WordsModuleAPIDbContext _dbContext;
-        public AuthController(IConfiguration configuration, WordsModuleAPIDbContext dbContext)
+        public AuthController(IConfiguration configuration, WordsModuleAPIDbContext dbContext,IUserService userService)
         {
             this.configuration = configuration;
             this._dbContext = dbContext;
