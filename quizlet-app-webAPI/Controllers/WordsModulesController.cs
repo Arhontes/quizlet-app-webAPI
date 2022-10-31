@@ -21,7 +21,9 @@ namespace quizlet_app_webAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetWordsModules()
         {
-            return Ok(await dbContext.WordsModules.ToListAsync());
+
+            var modules = await dbContext.WordsModules.ToListAsync();
+            return Ok(modules);
         }
         [HttpGet, AllowAnonymous]
         [Route("{id:guid}")]
