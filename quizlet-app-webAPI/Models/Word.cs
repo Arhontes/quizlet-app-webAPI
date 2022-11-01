@@ -1,11 +1,13 @@
-﻿namespace quizlet_app_webAPI.Models
+﻿using System.Text.Json.Serialization;
+
+namespace quizlet_app_webAPI.Models
 {
     public class Word
     {
 
         private string _meaning;
         private string _definition;
-        
+        [Key]
         public Guid WordId { get; set; }
         public string Meaning
         {
@@ -20,6 +22,7 @@
         public string? Transcription { get; set; }
         public string? WordImgUrl { get; set; }
         public Guid WordsModuleId { get; set; }
-        
+        [JsonIgnore]
+        public WordsModule WordsModule { get; set; }
     }
 }
