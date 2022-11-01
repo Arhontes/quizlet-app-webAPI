@@ -3,6 +3,6 @@
     public class AddWordsModuleRequest
     {
         public string Name { get; set; }
-        public DateTime CreateDate { get; set; }
+
     }
 }
