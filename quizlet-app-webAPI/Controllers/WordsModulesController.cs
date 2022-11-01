@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿global using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using quizlet_app_webAPI.Data;
@@ -12,22 +12,26 @@ namespace quizlet_app_webAPI.Controllers
     public class WordsModulesController : Controller
     {
         private readonly WordsModuleAPIDbContext dbContext;
-
-        public WordsModulesController(WordsModuleAPIDbContext dbContext)
+        private readonly IUserService _userService;
+        public WordsModulesController(WordsModuleAPIDbContext dbContext, IUserService userService)
         {
+            _userService = userService;
             this.dbContext = dbContext;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetWordsModules()
+        public async Task<IActionResult> GetAllWordsModules()
         {
+            var userId = _userService.GetUserId();
+            var modules = await dbContext.WordsModules
+                .Where(el => el.UserId.ToString() == userId)
+                .ToListAsync();
 
-            var modules = await dbContext.WordsModules.ToListAsync();
             return Ok(modules);
         }
         [HttpGet, AllowAnonymous]
         [Route("{id:guid}")]
-        public async Task<IActionResult> GetWordsModule([FromRoute] Guid id)
+        public async Task<IActionResult> GetOneWordsModule([FromRoute] Guid id)
         {
             var wordsModule = await dbContext.WordsModules.FindAsync(id);
             if (wordsModule == null)
@@ -41,9 +45,12 @@ namespace quizlet_app_webAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> AddWordsModule(AddWordsModuleRequest addWordsModuleRequest)
         {
+            var userId = _userService.GetUserId();
+           
             var wordsModule = new WordsModule()
             {
-                Id = Guid.NewGuid(),
+                UserId = Guid.Parse(userId),
+                WordsModuleId = Guid.NewGuid(),
                 CreateDate = DateTime.Now,
                 Name = addWordsModuleRequest.Name,
             };
@@ -61,7 +68,6 @@ namespace quizlet_app_webAPI.Controllers
             var wordsModule = await dbContext.WordsModules.FindAsync(id);
             if (wordsModule != null)
             {
-                wordsModule.CreateDate = updateWordsModuleRequest.CreateDate;
                 wordsModule.Name = updateWordsModuleRequest.Name;
 
                 await dbContext.SaveChangesAsync();
@@ -70,17 +76,24 @@ namespace quizlet_app_webAPI.Controllers
             }
             return NotFound();
         }
+
         [HttpDelete]
         [Route("{id:guid}")]
-        public async Task<IActionResult> DeleteWordsModule([FromRoute] Guid id, UpdateWordsModuleRequest updateWordsModuleRequest)
+        public async Task<IActionResult> DeleteWordsModule([FromRoute] Guid id)
         {
             var module = await dbContext.WordsModules.FindAsync(id);
-
+            
             if (module != null)
             {
+                if (module.UserId.ToString() != _userService.GetUserId())
+                {
+                    return BadRequest("access denied");
+                }
                 dbContext.Remove(module);
 
-                var words = await dbContext.Words.Where(el => el.WordsModuleId == module.Id).ToListAsync();
+                var words = await dbContext.Words
+                    .Where(el => el.WordsModuleId == module.WordsModuleId)
+                    .ToListAsync();
 
                 if (words.Any()) dbContext.Remove(words);
 
