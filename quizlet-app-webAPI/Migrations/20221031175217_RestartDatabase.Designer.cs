@@ -12,8 +12,8 @@ using quizlet_app_webAPI.Data;
 namespace quizlet_app_webAPI.Migrations
 {
     [DbContext(typeof(WordsModuleAPIDbContext))]
-    [Migration("20220930121413_Initial migration")]
-    partial class Initialmigration
+    [Migration("20221031175217_RestartDatabase")]
+    partial class RestartDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,43 @@ namespace quizlet_app_webAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("quizlet_app_webAPI.Models.ApplicationUser", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("RefreshToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TokenCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("TokenExpires")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
 
             modelBuilder.Entity("quizlet_app_webAPI.Models.Word", b =>
                 {
@@ -56,7 +93,7 @@ namespace quizlet_app_webAPI.Migrations
 
             modelBuilder.Entity("quizlet_app_webAPI.Models.WordsModule", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("WordsModuleId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -67,7 +104,15 @@ namespace quizlet_app_webAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("WordsCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("WordsModuleId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("WordsModules");
                 });
@@ -81,6 +126,22 @@ namespace quizlet_app_webAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("WordsModule");
+                });
+
+            modelBuilder.Entity("quizlet_app_webAPI.Models.WordsModule", b =>
+                {
+                    b.HasOne("quizlet_app_webAPI.Models.ApplicationUser", "User")
+                        .WithMany("WordsModules")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("quizlet_app_webAPI.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("WordsModules");
                 });
 
             modelBuilder.Entity("quizlet_app_webAPI.Models.WordsModule", b =>

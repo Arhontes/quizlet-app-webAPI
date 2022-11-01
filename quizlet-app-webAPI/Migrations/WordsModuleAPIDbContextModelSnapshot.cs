@@ -56,7 +56,7 @@ namespace quizlet_app_webAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("quizlet_app_webAPI.Models.Word", b =>
@@ -86,12 +86,12 @@ namespace quizlet_app_webAPI.Migrations
 
                     b.HasIndex("WordsModuleId");
 
-                    b.ToTable("Words");
+                    b.ToTable("Words", (string)null);
                 });
 
             modelBuilder.Entity("quizlet_app_webAPI.Models.WordsModule", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("WordsModuleId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -108,18 +108,38 @@ namespace quizlet_app_webAPI.Migrations
                     b.Property<int>("WordsCount")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("WordsModuleId");
 
-                    b.ToTable("WordsModules");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("WordsModules", (string)null);
                 });
 
             modelBuilder.Entity("quizlet_app_webAPI.Models.Word", b =>
                 {
-                    b.HasOne("quizlet_app_webAPI.Models.WordsModule", null)
+                    b.HasOne("quizlet_app_webAPI.Models.WordsModule", "WordsModule")
                         .WithMany("Words")
                         .HasForeignKey("WordsModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("WordsModule");
+                });
+
+            modelBuilder.Entity("quizlet_app_webAPI.Models.WordsModule", b =>
+                {
+                    b.HasOne("quizlet_app_webAPI.Models.ApplicationUser", "User")
+                        .WithMany("WordsModules")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("quizlet_app_webAPI.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("WordsModules");
                 });
 
             modelBuilder.Entity("quizlet_app_webAPI.Models.WordsModule", b =>
